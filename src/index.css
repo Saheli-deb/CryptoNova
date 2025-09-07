@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CryptoNova Design System - Premium Crypto Trading Platform */
+
+@layer base {
+  :root {
+    /* CryptoNova Dark Theme */
+    --background: 222 47% 4%;
+    --background-secondary: 223 47% 6%;
+    --background-tertiary: 224 47% 8%;
+    --foreground: 210 40% 98%;
+
+    /* Card System */
+    --card: 223 47% 6%;
+    --card-secondary: 224 47% 8%;
+    --card-foreground: 210 40% 98%;
+    --card-border: 220 47% 12%;
+
+    /* Glass Effect */
+    --glass: 220 47% 8% / 0.6;
+    --glass-border: 220 47% 20% / 0.3;
+
+    /* Crypto Brand Colors */
+    --primary: 237 92% 68%;
+    --primary-dark: 237 92% 58%;
+    --primary-foreground: 210 40% 98%;
+    
+    --secondary: 224 47% 12%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* Crypto Market Colors */
+    --success: 142 76% 56%;
+    --success-muted: 142 76% 46%;
+    --success-foreground: 210 40% 98%;
+    
+    --danger: 0 84% 60%;
+    --danger-muted: 0 84% 50%;
+    --danger-foreground: 210 40% 98%;
+
+    /* Neutral System */
+    --muted: 220 47% 15%;
+    --muted-foreground: 215 20% 65%;
+    
+    --accent: 237 92% 68%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Form Elements */
+    --border: 220 47% 12%;
+    --input: 220 47% 8%;
+    --input-focus: 220 47% 15%;
+    --ring: 237 92% 68%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(237 92% 68%), hsl(264 83% 58%));
+    --gradient-secondary: linear-gradient(135deg, hsl(142 76% 56%), hsl(166 76% 46%));
+    --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%), hsl(12 84% 50%));
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 4%), hsl(237 92% 8%));
+    --gradient-card: linear-gradient(135deg, hsl(223 47% 6%), hsl(224 47% 8%));
+
+    /* Shadows */
+    --shadow-glow: 0 0 40px hsl(237 92% 68% / 0.15);
+    --shadow-card: 0 8px 32px hsl(222 47% 2% / 0.4);
+    --shadow-lg: 0 20px 64px hsl(222 47% 2% / 0.6);
+
+    /* Animation Values */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    background: var(--gradient-hero);
+  }
+}
+
+@layer components {
+  /* Glass Card Effect */
+  .glass-card {
+    @apply bg-card/60 backdrop-blur-xl border border-white/10 rounded-xl;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Price Change Indicators */
+  .price-up {
+    @apply text-success-foreground;
+    color: hsl(var(--success));
+  }
+  
+  .price-down {
+    @apply text-danger-foreground;
+    color: hsl(var(--danger));
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Crypto Glow Effects */
+  .crypto-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Interactive Elements */
+  .hover-lift {
+    transition: var(--transition-smooth);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Chart Container */
+  .chart-container {
+    @apply bg-card-secondary/50 backdrop-blur-sm rounded-lg p-4 border border-white/5;
+  }
+}
