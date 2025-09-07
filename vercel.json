@@ -16,6 +16,6 @@
     }
   ],
   "env": {
-    "VITE_ML_API_URL": "@ml_api_url"
+    "VITE_ML_API_URL": "https://cryptonova-1.onrender.com"
   }
 }
