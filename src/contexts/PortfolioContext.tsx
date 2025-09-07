@@ -2,6 +2,9 @@ import React, { createContext, useContext, useState, useEffect, useCallback, Rea
 import { useAuth } from './AuthContext';
 import { toast } from 'sonner';
 
+// API base URL from environment variables
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
 export interface CryptoAsset {
   id: string;
   symbol: string;
@@ -91,7 +94,7 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
     
     try {
       setIsLoading(true);
-      const data = await makeAuthenticatedRequest('http://localhost:5000/api/portfolio');
+      const data = await makeAuthenticatedRequest(`${API_BASE_URL}/api/portfolio`);
       setPortfolio(data.portfolio);
     } catch (error: any) {
       console.error('Error loading portfolio:', error);
@@ -109,7 +112,7 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
 
     setIsLoading(true);
     try {
-      const response = await makeAuthenticatedRequest('http://localhost:5000/api/portfolio/add', {
+      const response = await makeAuthenticatedRequest(`${API_BASE_URL}/api/portfolio/add`, {
         method: 'POST',
         body: JSON.stringify(assetData),
       });
@@ -132,7 +135,7 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
     }
 
     try {
-      await makeAuthenticatedRequest('http://localhost:5000/api/portfolio/remove', {
+      await makeAuthenticatedRequest(`${API_BASE_URL}/api/portfolio/remove`, {
         method: 'DELETE',
         body: JSON.stringify({ assetId }),
       });
@@ -174,7 +177,7 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
     
     setIsLoading(true);
     try {
-      await makeAuthenticatedRequest('http://localhost:5000/api/portfolio/refresh', {
+      await makeAuthenticatedRequest(`${API_BASE_URL}/api/portfolio/refresh`, {
         method: 'POST',
       });
 
