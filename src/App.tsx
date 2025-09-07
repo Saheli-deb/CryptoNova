@@ -4,13 +4,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { PortfolioProvider } from "@/contexts/PortfolioContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
-import Portfolio from "./pages/Portfolio_Simple";
+import Portfolio from "./pages/Portfolio";
 import Predictions from "./pages/Predictions";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -26,7 +27,7 @@ const App = () => (
       <AuthProvider>
         <SettingsProvider>
           <NotificationProvider>
-            {/* <PortfolioProvider> */}
+            <PortfolioProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -67,7 +68,7 @@ const App = () => (
                 <CryptoChatbot />
               </div>
             </BrowserRouter>
-            {/* </PortfolioProvider> */}
+            </PortfolioProvider>
           </NotificationProvider>
         </SettingsProvider>
       </AuthProvider>

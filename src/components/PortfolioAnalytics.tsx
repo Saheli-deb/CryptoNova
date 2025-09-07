@@ -11,7 +11,7 @@ import {
   Target, 
   AlertCircle,
   Download,
-  Refresh
+  RefreshCw
 } from 'lucide-react';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { toast } from 'sonner';
@@ -44,23 +44,41 @@ const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({ className }) =>
   const [predictions, setPredictions] = useState<{ [key: string]: PredictionData }>({});
   const [isLoadingPredictions, setIsLoadingPredictions] = useState(false);
   const [reportData, setReportData] = useState<any>(null);
+  const [selectedTimeframe, setSelectedTimeframe] = useState<number>(7); // Default to 7 days
 
   // Fetch ML predictions for all assets
-  const fetchPredictions = async () => {
+  const fetchPredictions = async (timeframe?: number) => {
     if (portfolio.assets.length === 0) return;
     
+    const predictionTimeframe = timeframe || selectedTimeframe;
     setIsLoadingPredictions(true);
     try {
       const predictionPromises = portfolio.assets.map(async (asset) => {
         try {
+          // Map symbol to correct API format
+          const symbolMap: { [key: string]: string } = {
+            'BTC': 'bitcoin',
+            'ETH': 'ethereum',
+            'ADA': 'cardano',
+            'SOL': 'solana',
+            'DOT': 'polkadot',
+            'LINK': 'chainlink',
+            'LTC': 'litecoin',
+            'XRP': 'ripple',
+            'MATIC': 'matic-network',
+            'AVAX': 'avalanche-2'
+          };
+          
+          const apiSymbol = symbolMap[asset.symbol] || asset.symbol.toLowerCase();
+          
           const response = await fetch('http://localhost:5000/api/predict', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              symbol: asset.symbol.toLowerCase(),
-              timeframe: 7
+              symbol: apiSymbol,
+              timeframe: predictionTimeframe
             }),
           });
 
@@ -87,13 +105,20 @@ const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({ className }) =>
 
       setPredictions(newPredictions);
       generatePortfolioReport(newPredictions);
-      toast.success('Portfolio predictions updated!');
+      toast.success(`Portfolio predictions updated for ${predictionTimeframe} days!`);
     } catch (error) {
       toast.error('Failed to fetch predictions');
       console.error('Prediction error:', error);
     } finally {
       setIsLoadingPredictions(false);
     }
+  };
+
+  // Handle timeframe change
+  const handleTimeframeChange = async (timeframeDays: number) => {
+    setSelectedTimeframe(timeframeDays);
+    await fetchPredictions(timeframeDays);
+    toast.info(`Switching to ${timeframeDays}-day predictions...`);
   };
 
   // Generate comprehensive portfolio report
@@ -281,24 +306,48 @@ const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({ className }) =>
   return (
     <div className={`space-y-6 ${className}`}>
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Brain className="w-5 h-5" />
-            AI-Powered Portfolio Analytics
-          </CardTitle>
-          <div className="flex gap-2">
-            <Button 
-              onClick={fetchPredictions} 
-              disabled={isLoadingPredictions}
-              variant="outline"
-            >
-              <Refresh className="w-4 h-4 mr-2" />
-              {isLoadingPredictions ? 'Analyzing...' : 'Update Predictions'}
-            </Button>
-            <Button onClick={exportReport} variant="outline">
-              <Download className="w-4 h-4 mr-2" />
-              Export Report
-            </Button>
+        <CardHeader className="flex flex-col space-y-4">
+          <div className="flex flex-row items-center justify-between w-full">
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="w-5 h-5" />
+              AI-Powered Portfolio Analytics
+            </CardTitle>
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => fetchPredictions()} 
+                disabled={isLoadingPredictions}
+                variant="outline"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                {isLoadingPredictions ? 'Analyzing...' : 'Update Predictions'}
+              </Button>
+              <Button onClick={exportReport} variant="outline">
+                <Download className="w-4 h-4 mr-2" />
+                Export Report
+              </Button>
+            </div>
+          </div>
+          
+          {/* Timeframe Selector */}
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground font-medium">ML Prediction Timeframe:</span>
+            <div className="flex gap-1">
+              {[1, 7, 14, 30, 90].map((days) => (
+                <Button
+                  key={days}
+                  variant={selectedTimeframe === days ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleTimeframeChange(days)}
+                  disabled={isLoadingPredictions}
+                  className={`${selectedTimeframe === days ? 'bg-primary text-primary-foreground' : ''} min-w-[60px]`}
+                >
+                  {days === 1 ? '1D' : days === 7 ? '1W' : days === 14 ? '2W' : days === 30 ? '1M' : '3M'}
+                </Button>
+              ))}
+            </div>
+            <Badge variant="secondary" className="ml-2">
+              {selectedTimeframe}-day forecast
+            </Badge>
           </div>
         </CardHeader>
         <CardContent>
@@ -398,7 +447,7 @@ const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({ className }) =>
 
                       {prediction.future_predictions && prediction.future_predictions.length > 0 && (
                         <div className="mt-4">
-                          <p className="text-sm font-medium mb-2">7-Day Forecast</p>
+                          <p className="text-sm font-medium mb-2">{selectedTimeframe}-Day ML Forecast</p>
                           <ResponsiveContainer width="100%" height={200}>
                             <LineChart data={prediction.future_predictions}>
                               <CartesianGrid strokeDasharray="3 3" />

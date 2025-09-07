@@ -34,6 +34,23 @@ const Portfolio = () => {
   const [selectedTimeframe, setSelectedTimeframe] = useState("1D");
   const { portfolio, refreshPrices, removeAsset, isLoading } = usePortfolio();
 
+  // Move getAssetIcon function before its usage
+  const getAssetIcon = (symbol: string) => {
+    const icons: { [key: string]: string } = {
+      'BTC': '₿',
+      'ETH': 'Ξ', 
+      'SOL': '◎',
+      'ADA': '₳',
+      'DOT': '●',
+      'LINK': '⬡',
+      'LTC': 'Ł',
+      'XRP': '◉',
+      'MATIC': '⬟',
+      'AVAX': '▲'
+    };
+    return icons[symbol] || symbol.charAt(0);
+  };
+
   const handleRefreshPrices = async () => {
     try {
       await refreshPrices();
@@ -59,22 +76,6 @@ const Portfolio = () => {
     purchaseDate: asset.purchaseDate,
     icon: getAssetIcon(asset.symbol)
   }));
-
-  const getAssetIcon = (symbol: string) => {
-    const icons: { [key: string]: string } = {
-      'BTC': '₿',
-      'ETH': 'Ξ', 
-      'SOL': '◎',
-      'ADA': '₳',
-      'DOT': '●',
-      'LINK': '⬡',
-      'LTC': 'Ł',
-      'XRP': '◉',
-      'MATIC': '⬟',
-      'AVAX': '▲'
-    };
-    return icons[symbol] || symbol.charAt(0);
-  };
 
   const totalValue = portfolio.totalValue;
   const totalCost = portfolio.totalCost;

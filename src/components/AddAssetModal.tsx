@@ -111,7 +111,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ children }) => {
                 <select 
                   value={formData.symbol} 
                   onChange={(e) => setFormData({...formData, symbol: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white bg-white text-gray-900"
                 >
                   <option value="">Select cryptocurrency</option>
                   {popularCrypto.map((crypto) => (
@@ -131,7 +131,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ children }) => {
                     placeholder="e.g., DOGE"
                     value={formData.customSymbol}
                     onChange={(e) => setFormData({...formData, customSymbol: e.target.value.toUpperCase()})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white bg-white text-gray-900 dark:placeholder-gray-400 placeholder-gray-500"
                     required
                   />
                 </div>
@@ -147,7 +147,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ children }) => {
                     placeholder="0.00"
                     value={formData.amount}
                     onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white bg-white text-gray-900 dark:placeholder-gray-400 placeholder-gray-500"
                     required
                   />
                 </div>
@@ -161,7 +161,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ children }) => {
                     placeholder="0.00"
                     value={formData.purchasePrice}
                     onChange={(e) => setFormData({...formData, purchasePrice: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white bg-white text-gray-900 dark:placeholder-gray-400 placeholder-gray-500"
                     required
                   />
                 </div>
@@ -173,7 +173,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ children }) => {
                   type="date"
                   value={formData.purchaseDate ? format(formData.purchaseDate, 'yyyy-MM-dd') : ''}
                   onChange={(e) => setFormData({...formData, purchaseDate: e.target.value ? new Date(e.target.value) : undefined})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white bg-white text-gray-900"
                   required
                 />
               </div>
@@ -207,7 +207,6 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ children }) => {
         </div>
       )}
     </>
-  );
   );
 };
 
