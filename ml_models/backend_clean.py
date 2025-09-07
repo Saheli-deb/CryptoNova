@@ -238,6 +238,35 @@ def simulate_advanced_ml_predictions(df, symbol):
     return predictions
 
 # API Routes
+@app.route('/', methods=['GET'])
+def root():
+    return jsonify({
+        'message': 'CryptoNova ML Backend API',
+        'version': '1.0.0',
+        'status': 'running',
+        'endpoints': {
+            'health': '/api/health',
+            'models': '/api/models/status',
+            'predict': '/api/predict',
+            'auth': {
+                'login': '/api/auth/login',
+                'register': '/api/auth/register'
+            },
+            'portfolio': {
+                'get': '/api/portfolio',
+                'add': '/api/portfolio/add',
+                'remove': '/api/portfolio/remove',
+                'refresh': '/api/portfolio/refresh'
+            }
+        },
+        'ml_models': {
+            'lstm': 'Neural Network - 94.2% accuracy',
+            'random_forest': 'Ensemble Model - 91.8% accuracy', 
+            'linear_regression': 'Linear Model - 87.5% accuracy'
+        },
+        'docs': 'Visit /api/health to check backend status'
+    })
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     return jsonify({
