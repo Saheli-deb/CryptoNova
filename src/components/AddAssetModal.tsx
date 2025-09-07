@@ -82,9 +82,12 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ children }) => {
   };
 
   return (
-    <div>
+    <>
+      {/* Trigger Button */}
       {children ? (
-        <div onClick={handleOpenModal}>{children}</div>
+        <div onClick={handleOpenModal} style={{ cursor: 'pointer' }}>
+          {children}
+        </div>
       ) : (
         <Button onClick={handleOpenModal} className="bg-primary hover:bg-primary-dark">
           <Plus className="w-4 h-4 mr-2" />
@@ -203,7 +206,8 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ children }) => {
           </div>
         </div>
       )}
-    </div>
+    </>
+  );
   );
 };
 
