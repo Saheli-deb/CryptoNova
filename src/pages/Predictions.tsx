@@ -280,18 +280,7 @@ const Predictions = () => {
               </SelectContent>
             </Select>
 
-            <Button
-              onClick={getRealPredictions}
-              disabled={!isBackendAvailable || isLoading}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <RefreshCw className="w-4 h-4 mr-2" />
-              )}
-              {isLoading ? "Generating..." : "Get Predictions"}
-            </Button>
+            {/* Removed Get Predictions button as requested */}
           </div>
         </div>
 

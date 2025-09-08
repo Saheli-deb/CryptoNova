@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { toast } from 'sonner';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface PredictionData {
   symbol: string;
@@ -256,26 +258,97 @@ const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({ className }) =>
     return recommendations;
   };
 
-  const exportReport = () => {
+  const exportReport = async () => {
     if (!reportData) return;
-    
-    const reportContent = {
-      generatedAt: new Date().toISOString(),
-      portfolio: reportData,
-      predictions: predictions
-    };
-    
-    const blob = new Blob([JSON.stringify(reportContent, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `portfolio-report-${Date.now()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    toast.success('Portfolio report exported!');
+
+    try {
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+      const margin = 40;
+      let y = margin;
+
+      // Title
+      doc.setFontSize(18);
+      doc.text('CryptoNova - Portfolio Report', margin, y);
+      y += 24;
+
+      // Generated timestamp
+      doc.setFontSize(10);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, margin, y);
+      y += 20;
+
+      // Summary section
+      doc.setFontSize(14);
+      doc.text('Summary', margin, y);
+      y += 16;
+      doc.setFontSize(11);
+      doc.text([ 
+        `Total Assets: ${reportData.totalAssets}`,
+        `Total Value: $${reportData.totalValue.toLocaleString()}`,
+        `Total Cost: $${reportData.totalCost.toLocaleString()}`,
+        `Gain/Loss: $${reportData.totalGainLoss.toFixed(2)} (${reportData.totalGainLossPercentage.toFixed(2)}%)`,
+        `Risk Level: ${reportData.riskLevel}`,
+        `Diversification Score: ${reportData.diversificationScore}%`,
+        `Predicted Value (${selectedTimeframe}d): $${reportData.predictedValue.toLocaleString()}`
+      ], margin, y, { lineHeightFactor: 1.4 });
+      y += 120;
+
+      // Top Performer
+      doc.setFontSize(14);
+      doc.text('Top Performer', margin, y);
+      y += 16;
+      doc.setFontSize(11);
+      doc.text(`${reportData.topPerformer?.symbol || 'N/A'}`, margin, y);
+      y += 24;
+
+      // Asset Analysis table (basic)
+      doc.setFontSize(14);
+      doc.text('Holdings', margin, y);
+      y += 16;
+      doc.setFontSize(10);
+      const header = ['Symbol', 'Amount', 'Current Price', 'Value', 'P/L'];
+      const colWidths = [60, 60, 100, 100, 100];
+      let x = margin;
+      header.forEach((h, i) => { doc.text(h, x, y); x += colWidths[i]; });
+      y += 14;
+      doc.setLineWidth(0.5); doc.line(margin, y, 575, y); y += 10;
+
+      for (const asset of reportData.assetAnalysis.slice(0, 20)) { // cap rows for first page(s)
+        x = margin;
+        const value = (asset.amount * asset.currentPrice);
+        const pl = (asset.currentPrice - asset.purchasePrice) * asset.amount;
+        const row = [
+          asset.symbol,
+          String(asset.amount),
+          `$${asset.currentPrice.toFixed(2)}`,
+          `$${value.toLocaleString()}`,
+          `${pl >= 0 ? '+' : ''}$${pl.toFixed(2)}`
+        ];
+        row.forEach((cell, i) => { doc.text(String(cell), x, y); x += colWidths[i]; });
+        y += 14;
+        if (y > 760) { doc.addPage(); y = margin; }
+      }
+
+      // Recommendations
+      if (reportData.recommendations?.length) {
+        if (y > 680) { doc.addPage(); y = margin; }
+        doc.setFontSize(14);
+        doc.text('Recommendations', margin, y);
+        y += 16;
+        doc.setFontSize(11);
+        reportData.recommendations.slice(0, 10).forEach((rec: any, idx: number) => {
+          doc.text(`${idx + 1}. [${rec.type}] ${rec.message}`, margin, y);
+          y += 14;
+          if (y > 760) { doc.addPage(); y = margin; }
+        });
+      }
+
+      // Save file
+      doc.save(`portfolio-report-${Date.now()}.pdf`);
+      toast.success('Portfolio report exported as PDF!');
+    } catch (e) {
+      console.error(e);
+      toast.error('Failed to export PDF');
+    }
   };
 
   useEffect(() => {
